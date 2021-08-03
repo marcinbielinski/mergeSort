@@ -11,14 +11,14 @@ std::vector<T> mergeMeRee(const std::vector<T>& first, const std::vector<T>& sec
 
     for (const auto& elem : first)
     {
-        my_deq_first.emplace_back(std::move(elem));
+        my_deq_first.emplace_back(elem);
     }
 
     std::deque<T> my_deq_second;
 
     for (const auto& elem : second)
     {
-        my_deq_second.emplace_back(std::move(elem));
+        my_deq_second.emplace_back(elem);
     }
 
     while (!my_deq_first.empty() && !my_deq_second.empty())
@@ -26,25 +26,25 @@ std::vector<T> mergeMeRee(const std::vector<T>& first, const std::vector<T>& sec
 
         if (my_deq_first.front() <= my_deq_second.front())
         {
-            result.emplace_back(std::move(my_deq_first.front()));
+            result.emplace_back(my_deq_first.front());
             my_deq_first.pop_front();
         }
         else
         {
-            result.emplace_back(std::move(my_deq_second.front()));
+            result.emplace_back(my_deq_second.front());
             my_deq_second.pop_front();
         }
     }
 
     while (!my_deq_first.empty())
     {
-        result.emplace_back(std::move(my_deq_first.front()));
+        result.emplace_back(my_deq_first.front());
         my_deq_first.pop_front();
     }
 
     while (!my_deq_second.empty())
     {
-        result.emplace_back(std::move(my_deq_second.front()));
+        result.emplace_back(my_deq_second.front());
         my_deq_second.pop_front();
     }
     return result;
