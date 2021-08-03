@@ -61,33 +61,15 @@ std::vector<T> mergeSort (const std::vector<T>& to_sort)
     std::vector<T> helper1;
     std::vector<T> helper2;
 
-    auto reached_half = to_sort.size()/2;
-
     for (int i = 0; i < to_sort.size(); ++i)
     {
-        if (reached_half % 2 == 0)
+        if (i < (to_sort.size()/2))
         {
-            if (i < (to_sort.size()/2))
-            {
-                helper1.emplace_back(to_sort[i]);
-            }
-            else
-            {
-                helper2.emplace_back(to_sort[i]);
-            }
+            helper1.emplace_back(to_sort[i]);
         }
-        else if (reached_half % 2 != 0)
+        else
         {
-            reached_half = (to_sort.size()/2) + 1;
-
-            if (i < (to_sort.size()/2))
-            {
-                helper1.emplace_back(to_sort[i]);
-            }
-            else
-            {
-                helper2.emplace_back(to_sort[i]);
-            }
+            helper2.emplace_back(to_sort[i]);
         }
     }
 
