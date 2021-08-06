@@ -2,90 +2,129 @@
 #include <vector>
 #include <deque>
 
-template <typename T>
-std::vector<T> mergeMeRee(const std::vector<T>& first, const std::vector<T>& second)
+struct Card
 {
-    std::vector<T> result;
-
-    std::deque<T> my_deq_first;
-
-    for (const auto& elem : first)
+    Card(int value, std::string col) : val(value), color(std::move(col))
     {
-        my_deq_first.emplace_back(elem);
+
+    }
+    int getVal() const
+    {
+        return val;
     }
 
-    std::deque<T> my_deq_second;
-
-    for (const auto& elem : second)
+    std::string getColor() const
     {
-        my_deq_second.emplace_back(elem);
+        return color;
     }
+    friend bool operator< (Card const& a, Card const& b);
 
-    while (!my_deq_first.empty() && !my_deq_second.empty())
+private:
+    int val;
+    std::string color;
+};
+
+bool operator < (const Card& lhs, const Card& rhs)
+{
+    return lhs.val < rhs.val;
+}
+
+template <typename T, typename C>
+void mergeMeRee(std::vector<T>& to_sort, const std::vector<T>& first, const std::vector<T>& second, C&& comparator)
+{
+    std::size_t v1idx = 0;
+    std::size_t v2idx = 0;
+
+    auto size1 = first.size();
+    auto size2 = second.size();
+
+    while (comparator(v1idx, size1) && comparator(v2idx, size2))
     {
-
-        if (my_deq_first.front() <= my_deq_second.front())
+        if (comparator(first[v1idx], second[v2idx]))
         {
-            result.emplace_back(my_deq_first.front());
-            my_deq_first.pop_front();
+            to_sort.push_back(first[v1idx]);
+            v1idx++;
         }
         else
         {
-            result.emplace_back(my_deq_second.front());
-            my_deq_second.pop_front();
+            to_sort.push_back(second[v2idx]);
+            v2idx++;
         }
     }
-
-    while (!my_deq_first.empty())
+    while (comparator(v1idx, size1))
     {
-        result.emplace_back(my_deq_first.front());
-        my_deq_first.pop_front();
+        to_sort.push_back(first[v1idx]);
+        v1idx++;
     }
 
-    while (!my_deq_second.empty())
+    while (comparator(v2idx, size2))
     {
-        result.emplace_back(my_deq_second.front());
-        my_deq_second.pop_front();
+        to_sort.push_back(second[v2idx]);
+        v2idx++;
     }
-    return result;
 }
 
-template <typename T>
-std::vector<T> mergeSort (const std::vector<T>& to_sort)
+template <typename T, typename C>
+void mergeSort (std::vector<T>& to_sort, C&& comparator)
 {
     if (to_sort.size() <= 1)
     {
-        return to_sort;
+        return;
     }
 
-    std::vector<T> helper1;
-    std::vector<T> helper2;
+    auto it = begin(to_sort) + to_sort.size() / 2;
 
-    for (int i = 0; i < to_sort.size(); ++i)
+    std::vector<T> helper1 (begin(to_sort), it);
+    std::vector<T> helper2 (it, end(to_sort));
+
+    mergeSort(helper1, comparator);
+    mergeSort(helper2, comparator);
+
+    to_sort.clear();
+
+    mergeMeRee(to_sort, helper1, helper2, comparator);
+}
+
+template <typename T>
+void printMe(const std::vector<T>& to_print)
+{
+    for (auto& elem : to_print)
     {
-        if (i < (to_sort.size()/2))
-        {
-            helper1.emplace_back(to_sort[i]);
-        }
-        else
-        {
-            helper2.emplace_back(to_sort[i]);
-        }
+        std::cout << elem << ", ";
     }
+    std::cout << std::endl;
+}
 
-    auto first_half = mergeSort((helper1));
-    auto second_half = mergeSort((helper2));
-
-    return mergeMeRee(first_half, second_half);
+template <typename T>
+void printMe2(const std::vector<T>& to_print)
+{
+    for (const auto& elem : to_print)
+    {
+        std::cout << elem.getVal() << " : " << elem.getColor() << ", ";
+    }
+    std::cout << std::endl;
 }
 
 int main() {
-    std::vector<int> my_vec {5, 6, 3, 1, 10};
-    auto output = mergeSort(my_vec);
+    std::vector<int> my_vec {5, 6, 3, 1, 10, -40};
 
-    for (auto& elem : output)
-    {
-        std::cout << elem << ',';
-    }
+    printMe(my_vec);
+
+    mergeSort(my_vec, [](auto& first, auto& second){ return first < second; });
+
+    printMe(my_vec);
+
+    Card card1 {10, "Pik"};
+    Card card2 {5, "Kier"};
+    Card card3 {7, "Trefl"};
+
+    std::vector<Card> my_vec2 {card1, card2, card3};
+
+    printMe2(my_vec2);
+
+    mergeSort(my_vec2, [](auto& first, auto& second){ return first < second; });
+
+    printMe2(my_vec2);
+
     return 0;
 }
