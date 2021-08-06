@@ -17,17 +17,12 @@ struct Card
     {
         return color;
     }
-    friend bool operator< (Card const& a, Card const& b);
 
 private:
     int val;
     std::string color;
 };
 
-bool operator < (const Card& lhs, const Card& rhs)
-{
-    return lhs.val < rhs.val;
-}
 
 template <typename T, typename C>
 void mergeMeRee(std::vector<T>& to_sort, const std::vector<T>& first, const std::vector<T>& second, C&& comparator)
@@ -122,7 +117,7 @@ int main() {
 
     printMe2(my_vec2);
 
-    mergeSort(my_vec2, [](auto& first, auto& second){ return first < second; });
+    mergeSort(my_vec2, [](auto& first, auto& second){ return first.getVal() < second.getVal(); });
 
     printMe2(my_vec2);
 
