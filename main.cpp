@@ -121,5 +121,10 @@ int main() {
 
     printMe2(my_vec2);
 
+    mergeSort(my_vec2, [](auto& first, auto& second){ return first.getColor() < second.getColor(); });
+
+
+    printMe2(my_vec2);
+
     return 0;
 }
