@@ -38,7 +38,7 @@ void mergeMeRee(std::vector<T>& to_sort, const std::vector<T>& first, const std:
     auto size1 = first.size();
     auto size2 = second.size();
 
-    while (comparator(v1idx, size1) && comparator(v2idx, size2))
+    while (v1idx < size1 && v2idx < size2)
     {
         if (comparator(first[v1idx], second[v2idx]))
         {
@@ -51,13 +51,13 @@ void mergeMeRee(std::vector<T>& to_sort, const std::vector<T>& first, const std:
             v2idx++;
         }
     }
-    while (comparator(v1idx, size1))
+    while (v1idx < size1)
     {
         to_sort.push_back(first[v1idx]);
         v1idx++;
     }
 
-    while (comparator(v2idx, size2))
+    while (v2idx < size2)
     {
         to_sort.push_back(second[v2idx]);
         v2idx++;
